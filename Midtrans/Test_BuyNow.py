@@ -1,10 +1,13 @@
-from selenium import webdriver
+from selenium.webdriver import Chrome
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
+import platform
+from webdriver_manager.chrome import ChromeDriverManager
 import time
-
-driver = webdriver.Chrome(executable_path="D:\\Drivers\\chromedriver.exe")
+if platform.system() == "Windows":
+     driver = Chrome(executable_path="D:\\Drivers\\chromedriver.exe")
+elif platform.system() == "Darwin":
+    driver = Chrome(ChromeDriverManager().install())
 url = "https://demo.midtrans.com/"
 driver.get(url)
 driver.maximize_window()
@@ -41,18 +44,23 @@ currentWin = driver.current_window_handle
 print(currentWin)
 time.sleep(6)
 #---------------Order Summary-----------
-currentWin1 = driver.current_window_handle
-print(currentWin1)
+# currentWin1 = driver.current_window_handle
+# print(currentWin1)
 # acts = ActionChains(driver)
 # headerTxt = driver.find_element_by_xpath("//*[@id='header']/div/h1").text
 # print(headerTxt)
 # OrderSummary = driver.find_element_by_xpath("//*[@id='application']/div[1]/a")
 # acts.move_to_element(to_element=OrderSummary)
 # OrderSummary.click()
-ContinueButton = driver.find_element_by_link_text('Continue')
-ContinueButton.click()
+driver.switch_to.frame("snap-midtrans")
+time.sleep(2)
+ContinueButton = driver.find_element_by_xpath("//span[text()='Continue']")
+act =ActionChains(driver)
+act.click(ContinueButton).perform()
+
 CreditCard = driver.find_element_by_xpath("//div[text()='Credit Card']")
-CreditCard.click()
+act.click(CreditCard).perform()
+time.sleep(2)
 CardNumber = driver.find_element_by_name("cardnumber")
 CardNumber.send_keys("4811 1111 1111 1114")
 ExpiryDate = driver.find_element_by_xpath("//input[@placeholder='MM / YY']")
@@ -62,5 +70,5 @@ CVV.send_keys("123")
 PromoCode = driver.find_element_by_xpath("//input[@placeholder='123']")
 PromoCode.click()
 PayNow = driver.find_element_by_xpath("//span[text()='Pay Now']")
-PayNow.click()
+act.click(PayNow).perform()
 time.sleep(5)
