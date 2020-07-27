@@ -6,3 +6,4 @@ for x,i in zip(otp,count) :
 
 
  # driver.find_element_by_xpath("//input[@class='xyz']/[i]).send_key(x)
+
